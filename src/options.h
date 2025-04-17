@@ -31,11 +31,10 @@
 #define ARG_GAIN_MAX	0xfff0
 #define ARG_GAIN_AUTO	0xfff1
 
-#define TEST	0
+// #define TEST	1
 
 typedef struct
 {
-	char* args[2];
 	int dev_index;
 	int freq;
 	int freq_correction;
@@ -46,7 +45,8 @@ typedef struct
 	int dump;
 } options_t;
 
-void init_options(int argc, char** argv);
+void init_default_options();
+void init_options_from_args(int argc, char** argv);
 options_t* get_options();
 void print_usage();
 

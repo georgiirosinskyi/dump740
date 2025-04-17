@@ -38,10 +38,8 @@ static const struct option long_opts[] =
 	{NULL,				no_argument,		NULL,	 0 }
 };
 
-void init_options(int argc, char** argv)
+void init_default_options()
 {
-	int opt, len, mult, ind;
-
 	g_options.dev_index = 0;
 	g_options.freq = DEFAULT_FREQUENCY;
 	g_options.freq_correction = 0;
@@ -50,6 +48,13 @@ void init_options(int argc, char** argv)
 	g_options.raw = 0;
 	g_options.log_level = DEFAULT_LOG_LEVEL;
 	g_options.dump = 0;
+}
+
+void init_options_from_args(int argc, char** argv)
+{
+	int opt, len, mult, ind;
+
+	init_default_options();
 
 	opt = getopt_long(argc, argv, opts, long_opts, &ind);
 

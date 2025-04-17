@@ -11,12 +11,25 @@ add_definitions(-DVERSION_MINOR=${VERSION_INFO_MINOR_VERSION})
 add_definitions(-DVERSION_PATCH=${VERSION_INFO_PATCH_VERSION})
 add_definitions("-O3 -Wall")
 
-file(GLOB SOURCES "*.c")
+set(SOURCES
+    src/decoder.c
+    src/dump740.c
+    src/options.c
+    src/receiver.c
+    src/routines.c
+    src/thread.c)
 
-add_executable(dump740 ${SOURCES})
+# Define the library
+add_library(dump740 SHARED ${SOURCES})
+
+# Include headers
+target_include_directories(dump740 PUBLIC include)
+
+# Define the export macro for Windows
+target_compile_definitions(dump740 PRIVATE DUMP740_EXPORTS)
+
 
 include(FindPkgConfig)
 pkg_check_modules(LIBRTLSDR librtlsdr)
 include_directories(${LIBRTLSDR_INCLUDE_DIRS})
 target_link_libraries (dump740 pthread m ${LIBRTLSDR_LIBRARIES})
-
