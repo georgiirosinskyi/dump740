@@ -33,3 +33,13 @@ include(FindPkgConfig)
 pkg_check_modules(LIBRTLSDR librtlsdr)
 include_directories(${LIBRTLSDR_INCLUDE_DIRS})
 target_link_libraries (dump740 pthread m ${LIBRTLSDR_LIBRARIES})
+
+add_executable(dump740_app example/example.c)
+
+target_link_libraries(dump740_app PRIVATE dump740)
+
+add_dependencies(dump740_app dump740)
+
+set_target_properties(dump740_app PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
