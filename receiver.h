@@ -19,11 +19,8 @@
 #ifndef _DUMP_740_RECEIVER_H_
 #define _DUMP_740_RECEIVER_H_
 
-
 void init_receiver();
 void close_receiver();
 void *reader(void *ptr);
 
-
 #endif
-

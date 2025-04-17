@@ -24,7 +24,8 @@ static options_t g_options;
 
 static const char *opts = "d:f:c:g:i:rl:Dh?";
 
-static const struct option long_opts[] = {
+static const struct option long_opts[] =
+{
 	{"device-index",	required_argument,	NULL,	'd'},
 	{"freq",			required_argument,	NULL,	'f'},
 	{"freq-correction",	required_argument,	NULL,	'c'},
@@ -34,10 +35,10 @@ static const struct option long_opts[] = {
 	{"log-level",		required_argument,	NULL,	'l'},
 	{"dump",			no_argument,		NULL,	'D'},
 	{"help",			required_argument,	NULL,	'h'},
-	{NULL,				no_argument,		NULL,	0}
+	{NULL,				no_argument,		NULL,	 0 }
 };
 
-void init_options(int argc, char **argv)
+void init_options(int argc, char** argv)
 {
 	int opt, len, mult, ind;
 
@@ -50,52 +51,74 @@ void init_options(int argc, char **argv)
 	g_options.log_level = DEFAULT_LOG_LEVEL;
 	g_options.dump = 0;
 
-	opt = getopt_long( argc, argv, opts, long_opts, &ind);
+	opt = getopt_long(argc, argv, opts, long_opts, &ind);
 
-	while (opt != -1) {
-		switch (opt) {
+	while (opt != -1)
+	{
+		switch (opt)
+		{
 			case 'd':
 				g_options.dev_index = atoi(optarg);
 				break;
+
 			case 'f':
 				len = strlen(optarg);
 				if (len < 1)
+				{
 					fatal("Incorrect argument for freq-correction: '%s'\n", optarg);
+				}
 				mult = 1;
 				if (optarg[len-1] == 'M')
+				{
 					mult = 1000000;
+				}
 				else if (optarg[len-1] == 'K')
+				{
 					mult = 1000;
+				}
 				g_options.freq = atoi(optarg) * mult;
 				break;
+
 			case 'c':
 				g_options.freq_correction = atoi(optarg);
 				break;
+
 			case 'g':
 				if (strcmp(optarg, "A") == 0)
+				{
 					g_options.gain = ARG_GAIN_AUTO;
+				}
 				else
+				{
 					g_options.gain = atof(optarg) * 10;
+				}
 				break;
+
 			case 'i':
 				g_options.ifile = optarg;
 				break;
+
 			case 'r':
 				g_options.raw = 1;
 				break;
+
 			case 'l':
 				g_options.log_level = atoi(optarg);
 				break;
+
 			case 'D':
 				g_options.dump = 1;
 				break;
+
 			case 'h':
 			case '?':
 				print_usage();
 				exit(0);
+
 			default:
 				break;
 		}
+
 		opt = getopt_long( argc, argv, opts, long_opts, &ind);
 	}
 }

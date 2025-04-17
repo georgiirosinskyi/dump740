@@ -23,12 +23,10 @@
 #include <time.h>
 #include <stdlib.h> //FIXME найти в других файлах и выпилить
 
-
-static const char *log_strings[] = {"DEBUG", "INFO", "WARNING", "ALERT", "FATAL"};
+static const char* log_strings[] = {"DEBUG", "INFO", "WARNING", "ALERT", "FATAL"};
 static time_t t0 = 0;
 
-
-void print(const char *fmt, ...)
+void print(const char* fmt, ...)
 {
 	va_list args;
 
@@ -37,19 +35,25 @@ void print(const char *fmt, ...)
 	va_end(args);
 }
 
-void log_func(unsigned char level, const char *file, const char *func, const char *fmt, ...)
+void log_func(unsigned char level, const char* file, const char* func, const char* fmt, ...)
 {
 	char buf[1024];
 	va_list args;
 
 	if (t0 == 0)
+	{
 		t0 = time(NULL);
+	}
 
 	if (level < get_options()->log_level)
+	{
 		return;
+	}
 
 	if (level > 4)
+	{
 		level = 4;
+	}
 
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args);
@@ -58,6 +62,7 @@ void log_func(unsigned char level, const char *file, const char *func, const cha
 	fprintf(stderr, "%lu: %s:%s() [%s] %s\n", time(NULL) - t0, file, func, log_strings[level], buf);
 
 	if (level == LOG_FATAL)
+	{
 		exit(-1);
+	}
 }
-

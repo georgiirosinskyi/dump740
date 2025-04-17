@@ -22,7 +22,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-
 static pthread_t thread;
 static pthread_mutex_t end_mutex;
 static pthread_barrier_t barrier;
@@ -30,8 +29,7 @@ static pthread_barrier_t barrier;
 static block_t blocks[2];
 static int end_flag;
 
-
-int init_thread(void *(*func)(void *))
+int init_thread(void* (*func)(void*))
 {
 	end_flag = 0;
 
@@ -42,16 +40,24 @@ int init_thread(void *(*func)(void *))
 	blocks[1].data = malloc(sizeof(uint16_t) * BLOCK_SIZE);
 
 	if (!(blocks[0].data && blocks[1].data))
+	{
 		fatal("Malloc error.");
+	}
 
 	if (pthread_mutex_init(&end_mutex, NULL) != 0)
+	{
 		fatal("Pthread mutex error");
+	}
 
 	if (pthread_barrier_init(&barrier, NULL, 2) != 0)
+	{
 		fatal("Pthread barrier error");
+	}
 
 	if (pthread_create(&thread, NULL, func, NULL) != 0)
+	{
 		fatal("Pthread creating error\n");
+	}
 
 	return 0;
 }
@@ -65,20 +71,25 @@ void close_thread()
 	free(blocks[1].data);
 }
 
-
-block_t *next_block(int *i)
+block_t *next_block(int* i)
 {
 	int end = 0;
 
 	pthread_barrier_wait(&barrier);
 
 	pthread_mutex_lock(&end_mutex);
+
 	if (end_flag)
+	{
 		end = 1;
+	}
+
 	pthread_mutex_unlock(&end_mutex);
 
 	if (end)
+	{
 		return NULL;
+	}
 
 	*i = (*i) ? 0 : 1;
 
@@ -91,5 +102,3 @@ void set_end()
 	end_flag = 1;
 	pthread_mutex_unlock(&end_mutex);
 }
-
-

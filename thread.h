@@ -19,21 +19,18 @@
 #ifndef _DUMP_740_THREAD_H_
 #define _DUMP_740_THREAD_H_
 
-
 #include <stdint.h>
 
-
-typedef struct {
-	uint16_t *data;
+typedef struct
+{
+	uint16_t* data;
 	int data_length;
 } block_t;
 
 
-int init_thread(void *(*func)(void *));
+int init_thread(void* (*func)(void*));
 void close_thread();
-block_t *next_block(int *i);
+block_t* next_block(int* i);
 void set_end();
 
-
 #endif
-

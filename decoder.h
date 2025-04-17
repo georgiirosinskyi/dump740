@@ -19,19 +19,18 @@
 #ifndef _DUMP_740_DECODER_H_
 #define _DUMP_740_DECODER_H_
 
-
-#include "options.h"
 #include <stdint.h>
 #include <stdio.h>
 
+#include "options.h"
 
 #define TYPE_ZK1	1
 #define TYPE_ZK2	2
 #define TYPE_ZK3	3
 
-
 void init_decoder();
 void close_decoder();
+
 int decode(uint16_t *block,
 		   int blen,
 #ifdef TEST
@@ -40,6 +39,7 @@ int decode(uint16_t *block,
 		   uint32_t *msg,
 #endif
 		   int max_mlen);
+
 void print_message(FILE *f,
 #ifdef TEST
 					uint64_t tmessage,
@@ -49,6 +49,4 @@ void print_message(FILE *f,
 #endif
 );
 
-
 #endif
-

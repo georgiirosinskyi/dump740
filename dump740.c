@@ -30,10 +30,9 @@
 #include <errno.h>
 #endif
 
-
 static void work()
 {
-	block_t *block;
+	block_t* block;
 	int block_index = 0;
 	int cnt, i;
 	options_t options = *get_options();
@@ -50,8 +49,9 @@ static void work()
 	total_t1 = time(NULL);
 	total_t2 = total_t1;
 
-	if (options.dump) {
-		struct tm *timeinfo;
+	if (options.dump)
+	{
+		struct tm* timeinfo;
 		char tbuf[32];
 
 		timeinfo = localtime(&total_t1);
@@ -60,7 +60,9 @@ static void work()
 		print("Dump file: %s\n", tbuf);
 		fd = open(tbuf, O_WRONLY|O_CREAT|O_TRUNC, 0666);
 		if (fd < 0)
+		{
 			fatal("Dump file opening error: %s", strerror(errno));
+		}
 	}
 
 	total_c0 = clock();
@@ -68,14 +70,17 @@ static void work()
 	uint32_t msg[MAX_MESSAGES_IN_BLOCK];
 #endif
 
-	while ((block = next_block(&block_index))) {
+	while ((block = next_block(&block_index)))
+	{
 #ifdef TEST
 		block_c1 = clock();
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-result"
 		if (options.dump)
+		{
 			write(fd, block->data, block->data_length);
+		}
 #pragma GCC diagnostic pop
 #endif
 
@@ -87,35 +92,46 @@ static void work()
 
 		blocks_count++;
 
-		if (total_t2 != total_t2_prev) {
-			if (total_t2_prev > 0) {
+		if (total_t2 != total_t2_prev)
+		{
+			if (total_t2_prev > 0)
+			{
 				blocks_lost = (long)(((double)(total_t2 - total_t1) * SAMPLE_RATE) / BLOCK_SIZE - blocks_count);
 				if (blocks_lost < 0)
+				{
 					blocks_lost = 0;
-				block_time = (unsigned long)(((double)(block_c2 - block_c1))/CLOCKS_PER_SEC*1000000);
+				}
+				block_time = (unsigned long)(((double)(block_c2 - block_c1)) / CLOCKS_PER_SEC * 1000000);
 
 				debug("block time = %lu us; blocks handled = %lu; blocks lost = %lu",
-						block_time, blocks_count, blocks_lost);
+					   block_time, blocks_count, blocks_lost);
 			}
 			total_t2_prev = total_t2;
 		}
 #endif
 		for (i = 0; i < cnt; i++)
+		{
 #ifdef TEST
 			print_message(stdout, msg[i], blocks_count-1);
 #else
 			print_message(stdout, msg[i]);
 #endif
+		}
 	}
 #ifdef TEST
 	blocks_lost = (long)(((double)(total_t2 - total_t1) * SAMPLE_RATE) / BLOCK_SIZE - blocks_count);
 	if (blocks_lost < 0)
+	{
 		blocks_lost = 0;
+	}
+
 	info("total time = %.3f; total blocks handled = %lu; total blocks lost = %lu",
 			(double)(clock()-total_c0)/CLOCKS_PER_SEC, blocks_count, blocks_lost);
 
 	if (options.dump)
+	{
 		close(fd);
+	}
 #endif
 }
 
@@ -135,4 +151,3 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-

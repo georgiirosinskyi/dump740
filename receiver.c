@@ -26,10 +26,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
-
-static rtlsdr_dev_t *dev = NULL;
+static rtlsdr_dev_t* dev = NULL;
 static int fd = -1;
-
 
 static void init_rtlsdr()
 {
@@ -40,33 +38,44 @@ static void init_rtlsdr()
 
 	cnt = rtlsdr_get_device_count();
 	if (!cnt)
+	{
 		fatal("RTLSDR devices not found.");
+	}
 
 	fprintf(stderr, "Found %d device(s):\n", cnt);
-	for (i = 0; i < cnt; i++) {
+	for (i = 0; i < cnt; i++)
+	{
 		rtlsdr_get_device_usb_strings(i, vend, prod, sn);
 		print("\t%d: %s, %s, %s\n", i, vend, prod, sn);
 	}
 
 	if (rtlsdr_open(&dev, options.dev_index) < 0)
+	{
 		fatal("RTLSDR device open error: %s", strerror(errno));
+	}
 
 	rtlsdr_set_freq_correction(dev, options.freq_correction);
 	rtlsdr_set_center_freq(dev, options.freq);
 
 	rtlsdr_set_tuner_gain_mode(dev, (options.gain != ARG_GAIN_AUTO));
-	if (options.gain != ARG_GAIN_AUTO) {
-		if (options.gain == ARG_GAIN_MAX) {
+	if (options.gain != ARG_GAIN_AUTO)
+	{
+		if (options.gain == ARG_GAIN_MAX)
+		{
 			cnt = rtlsdr_get_tuner_gains(dev, gains);
 			if (cnt <= 0)
+			{
 				fatal("Gains not available");
+			}
 
 			options.gain = gains[cnt - 1];
 			print("Max available gain is: %.2f db\n", options.gain/10.0);
 		}
 		rtlsdr_set_tuner_gain(dev, options.gain);
 		print("Setting gain to: %.2f db\n", options.gain/10.0);
-	} else {
+	}
+	else
+	{
 		print("Using AGC\n");
 		rtlsdr_set_agc_mode(dev, 1);
 	}
@@ -82,37 +91,53 @@ static void init_rtlsdr()
 
 void init_receiver()
 {
-	if (get_options()->ifile) {
+	if (get_options()->ifile)
+	{
 		fd = open(get_options()->ifile, O_RDONLY);
 		if (fd < 0)
+		{
 			fatal("File error: %s", strerror(errno));
-	} else
+		}
+	}
+	else
+	{
 		init_rtlsdr();
+	}
 }
 
 void close_receiver()
 {
 	if (dev)
+	{
 		rtlsdr_close(dev);
+	}
+
 	if (fd >= 0)
+	{
 		close(fd);
+	}
 }
 
-void *reader(void *ptr)
+void* reader(void* ptr)
 {
-	block_t *block;
+	block_t* block;
 	int block_index = 1;
 	int mlen, res = -1;
 
-	while ((block = next_block(&block_index))) {
-		if (dev) {
+	while ((block = next_block(&block_index)))
+	{
+		if (dev)
+		{
 			res = rtlsdr_read_sync(dev, block->data, sizeof(uint16_t)*BLOCK_SIZE, &mlen);
-		} else if (fd >= 0) {
+		}
+		else if (fd >= 0)
+		{
 			mlen = read(fd, block->data, BLOCK_SIZE);
 			res = (mlen) ? 0 : -1;
 		}
 
-		if (res != 0) {
+		if (res != 0)
+		{
 			set_end();
 			continue;
 		}
@@ -120,4 +145,3 @@ void *reader(void *ptr)
 	}
 	return NULL;
 }
-

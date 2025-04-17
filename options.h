@@ -35,18 +35,18 @@
 
 typedef struct
 {
-	char *args[2];
+	char* args[2];
 	int dev_index;
 	int freq;
 	int freq_correction;
 	int gain;
-	char *ifile;
+	char* ifile;
 	int raw;
 	unsigned char log_level;
 	int dump;
 } options_t;
 
-void init_options(int argc, char **argv);
+void init_options(int argc, char** argv);
 options_t* get_options();
 void print_usage();
 
