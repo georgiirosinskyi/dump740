@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-
 #define MAX_MSG_SIZE	728 // (44 us header + 8*20*2 us data) * 2 (1 item = 0.5 us)
 #define MAG_TABLE_SIZE	65536
 
@@ -197,7 +196,7 @@ void print_message(FILE *f,
 
 	fprintf(f, "*%08x;\n", message);
 
-	if (options.raw)
+	if (get_options()->raw)
 		return;
 
 	type = (message >> 24);

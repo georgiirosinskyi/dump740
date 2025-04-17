@@ -45,7 +45,7 @@ void log_func(unsigned char level, const char *file, const char *func, const cha
 	if (t0 == 0)
 		t0 = time(NULL);
 
-	if (level < options.log_level)
+	if (level < get_options()->log_level)
 		return;
 
 	if (level > 4)

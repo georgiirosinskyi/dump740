@@ -35,3 +35,5 @@
 # Other
 build
 *.kdev4
+.vscode
+.clang-format

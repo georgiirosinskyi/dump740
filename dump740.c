@@ -36,6 +36,7 @@ static void work()
 	block_t *block;
 	int block_index = 0;
 	int cnt, i;
+	options_t options = *get_options();
 
 #ifdef TEST
 	uint64_t msg[MAX_MESSAGES_IN_BLOCK];
@@ -120,7 +121,7 @@ static void work()
 
 int main(int argc, char **argv)
 {
-	parse_args(argc, argv);
+	init_options(argc, argv);
 
 	init_decoder();
 	init_receiver();

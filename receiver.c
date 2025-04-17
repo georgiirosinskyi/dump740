@@ -36,6 +36,7 @@ static void init_rtlsdr()
 	int cnt, i;
 	int gains[64];
 	char vend[256], prod[256], sn[256];
+	options_t options = *get_options();
 
 	cnt = rtlsdr_get_device_count();
 	if (!cnt)
@@ -81,8 +82,8 @@ static void init_rtlsdr()
 
 void init_receiver()
 {
-	if (options.ifile) {
-		fd = open(options.ifile, O_RDONLY);
+	if (get_options()->ifile) {
+		fd = open(get_options()->ifile, O_RDONLY);
 		if (fd < 0)
 			fatal("File error: %s", strerror(errno));
 	} else

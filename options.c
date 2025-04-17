@@ -20,8 +20,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-
-options_t options;
+static options_t g_options;
 
 static const char *opts = "d:f:c:g:i:rl:Dh?";
 
@@ -38,25 +37,25 @@ static const struct option long_opts[] = {
 	{NULL,				no_argument,		NULL,	0}
 };
 
-void parse_args(int argc, char **argv)
+void init_options(int argc, char **argv)
 {
 	int opt, len, mult, ind;
 
-	options.dev_index = 0;
-	options.freq = DEFAULT_FREQUENCY;
-	options.freq_correction = 0;
-	options.gain = ARG_GAIN_MAX;
-	options.ifile = NULL;
-	options.raw = 0;
-	options.log_level = DEFAULT_LOG_LEVEL;
-	options.dump = 0;
+	g_options.dev_index = 0;
+	g_options.freq = DEFAULT_FREQUENCY;
+	g_options.freq_correction = 0;
+	g_options.gain = ARG_GAIN_MAX;
+	g_options.ifile = NULL;
+	g_options.raw = 0;
+	g_options.log_level = DEFAULT_LOG_LEVEL;
+	g_options.dump = 0;
 
 	opt = getopt_long( argc, argv, opts, long_opts, &ind);
 
 	while (opt != -1) {
 		switch (opt) {
 			case 'd':
-				options.dev_index = atoi(optarg);
+				g_options.dev_index = atoi(optarg);
 				break;
 			case 'f':
 				len = strlen(optarg);
@@ -67,28 +66,28 @@ void parse_args(int argc, char **argv)
 					mult = 1000000;
 				else if (optarg[len-1] == 'K')
 					mult = 1000;
-				options.freq = atoi(optarg) * mult;
+				g_options.freq = atoi(optarg) * mult;
 				break;
 			case 'c':
-				options.freq_correction = atoi(optarg);
+				g_options.freq_correction = atoi(optarg);
 				break;
 			case 'g':
 				if (strcmp(optarg, "A") == 0)
-					options.gain = ARG_GAIN_AUTO;
+					g_options.gain = ARG_GAIN_AUTO;
 				else
-					options.gain = atof(optarg) * 10;
+					g_options.gain = atof(optarg) * 10;
 				break;
 			case 'i':
-				options.ifile = optarg;
+				g_options.ifile = optarg;
 				break;
 			case 'r':
-				options.raw = 1;
+				g_options.raw = 1;
 				break;
 			case 'l':
-				options.log_level = atoi(optarg);
+				g_options.log_level = atoi(optarg);
 				break;
 			case 'D':
-				options.dump = 1;
+				g_options.dump = 1;
 				break;
 			case 'h':
 			case '?':
@@ -99,6 +98,11 @@ void parse_args(int argc, char **argv)
 		}
 		opt = getopt_long( argc, argv, opts, long_opts, &ind);
 	}
+}
+
+options_t* get_options()
+{
+	return &g_options;
 }
 
 void print_usage()
@@ -122,4 +126,3 @@ void print_usage()
 			"\t--usage                      Give a short usage message\n",
 		VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 }
-

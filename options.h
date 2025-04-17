@@ -19,9 +19,7 @@
 #ifndef _DUMP_740_OPTIONS_H_
 #define _DUMP_740_OPTIONS_H_
 
-
 #include "routines.h"
-
 
 #define DEFAULT_FREQUENCY		740000000
 #define SAMPLE_RATE				2000000
@@ -34,7 +32,6 @@
 #define ARG_GAIN_AUTO	0xfff1
 
 #define TEST	0
-
 
 typedef struct
 {
@@ -49,13 +46,8 @@ typedef struct
 	int dump;
 } options_t;
 
-
-extern options_t options;
-
-
-void parse_args(int argc, char **argv);
+void init_options(int argc, char **argv);
+options_t* get_options();
 void print_usage();
 
-
 #endif
-
