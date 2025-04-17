@@ -59,7 +59,7 @@ void log_func(unsigned char level, const char* file, const char* func, const cha
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
 
-	fprintf(stderr, "%lu: %s:%s() [%s] %s\n", time(NULL) - t0, file, func, log_strings[level], buf);
+	fprintf(stderr, "%lld: %s:%s() [%s] %s\n", time(NULL) - t0, file, func, log_strings[level], buf);
 
 	if (level == LOG_FATAL)
 	{
