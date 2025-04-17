@@ -143,42 +143,43 @@ int decode(uint16_t* block,
 			continue;
 		}
 
-		type = TYPE_ZK1;
-		last_pulse = check_timing(timing_zk1, block, i);
-		if (last_pulse)
-			goto read_msg_data;
+		last_pulse = 0;
+		type = -1;
 
-		type = TYPE_ZK2;
-		last_pulse = check_timing(timing_zk2, block, i);
-		if (last_pulse)
-			goto read_msg_data;
-
-		type = TYPE_ZK3;
-		last_pulse = check_timing(timing_zk3, block, i);
-		if (last_pulse)
-			goto read_msg_data;
-
-		continue;
-
-read_msg_data:
-		data = read_data(block + last_pulse);
-		if (data != -1)
+		if ((last_pulse = check_timing(timing_zk1, block, i)))
 		{
-			if (mlen >= max_mlen)
-			{
-				return mlen;
-			}
-			msg[mlen] = data + (type << 24);
-#ifdef TEST
-			msg[mlen] += (uint64_t)i << 32;
-#endif
-
-			mlen++;
-
-			i = last_pulse + 640;
+			type = TYPE_ZK1;
+		}
+		else if ((last_pulse = check_timing(timing_zk2, block, i)))
+		{
+			type = TYPE_ZK2;
+		}
+		else if ((last_pulse = check_timing(timing_zk3, block, i)))
+		{
+			type = TYPE_ZK3;
 		}
 
+		if (last_pulse)
+		{
+			data = read_data(block + last_pulse);
+			if (data != -1)
+			{
+				if (mlen >= max_mlen)
+				{
+					return mlen;
+				}
+
+				msg[mlen] = data + (type << 24);
+#ifdef TEST
+				msg[mlen] += (uint64_t)i << 32;
+#endif
+				mlen++;
+
+				i = last_pulse + 640;
+			}
+		}
 	}
+
 	return mlen;
 }
 
@@ -214,7 +215,7 @@ void print_message(FILE *f,
 	message = tmessage & 0xffffffff;
 	tmessage >>= 32;
 	tmessage += (uint64_t)block_n * (BLOCK_SIZE >> 1);
-	fprintf(f, "offset = %lu\n", tmessage);
+	fprintf(f, "offset = %llu\n", tmessage);
 #endif
 
 	fprintf(f, "*%08x;\n", message);
