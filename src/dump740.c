@@ -33,7 +33,7 @@ static void* work()
     return NULL;
 }
 
-__declspec(dllexport) void init_lib(t_Options* options)
+__declspec(dllexport) void dump740_init(t_Options* options)
 {
     if (!options)
     {
@@ -47,7 +47,7 @@ __declspec(dllexport) void init_lib(t_Options* options)
 	init_receiver();
 }
 
-__declspec(dllexport) void start_lib()
+__declspec(dllexport) void dump740_start()
 {
     init_thread(reader);
     if (pthread_create(&g_thread, NULL, work, NULL) != 0)
@@ -56,24 +56,24 @@ __declspec(dllexport) void start_lib()
 	}
 }
 
-__declspec(dllexport) void stop_lib()
+__declspec(dllexport) void dump740_stop()
 {
     set_end();
     pthread_join(g_thread, NULL);
     close_thread();
 }
 
-__declspec(dllexport) void register_callback(BoardSignalCallback callback)
+__declspec(dllexport) void dump740_register_callback(BoardSignalCallback callback)
 {
     g_callback = callback;
 }
 
-__declspec(dllexport) void deregister_callback()
+__declspec(dllexport) void dump740_deregister_callback()
 {
     g_callback = NULL;
 }
 
-__declspec(dllexport) void deinit_lib()
+__declspec(dllexport) void dump740_deinit()
 {
     close_receiver();
 	close_decoder();
