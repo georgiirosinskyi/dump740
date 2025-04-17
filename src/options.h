@@ -19,6 +19,7 @@
 #ifndef _DUMP_740_OPTIONS_H_
 #define _DUMP_740_OPTIONS_H_
 
+#include "dump740_types.h"
 #include "routines.h"
 
 #define DEFAULT_FREQUENCY		740000000
@@ -33,21 +34,8 @@
 
 // #define TEST	1
 
-typedef struct
-{
-	int dev_index;
-	int freq;
-	int freq_correction;
-	int gain;
-	char* ifile;
-	int raw;
-	unsigned char log_level;
-	int dump;
-} options_t;
-
 void init_default_options();
-void init_options_from_args(int argc, char** argv);
-options_t* get_options();
-void print_usage();
+void set_options(t_Options* options);
+t_Options* get_options();
 
 #endif

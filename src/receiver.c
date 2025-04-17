@@ -34,7 +34,7 @@ static void init_rtlsdr()
 	int cnt, i;
 	int gains[64];
 	char vend[256], prod[256], sn[256];
-	options_t options = *get_options();
+	t_Options options = *get_options();
 
 	cnt = rtlsdr_get_device_count();
 	if (!cnt)

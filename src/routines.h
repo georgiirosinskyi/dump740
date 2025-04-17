@@ -20,12 +20,7 @@
 #define _DUMP_740_ROUTINES_H_
 
 #include <string.h>
-
-#define LOG_DEBUG	0
-#define LOG_INFO	1
-#define LOG_WARNING	2
-#define LOG_ALERT	3
-#define LOG_FATAL	4
+#include "dump740_types.h"
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 

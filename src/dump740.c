@@ -33,9 +33,16 @@ static void* work()
     return NULL;
 }
 
-__declspec(dllexport) void init_lib()
+__declspec(dllexport) void init_lib(t_Options* options)
 {
-    init_default_options();
+    if (!options)
+    {
+        init_default_options();
+    }
+    else
+    {
+        set_options(options);
+    }
     init_decoder();
 	init_receiver();
 }
